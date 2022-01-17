@@ -113,6 +113,32 @@ public class ClientMain {
 		System.out.println("근무지:"+vo.getDvo().getLoc());
 		System.out.println("호봉:"+vo.getSvo().getGrade());
 		
+		System.out.println("\n");
+		System.out.println("==== JDBC에서 서브쿼리 이용 =====");
+		List<EmpVO> subList=dao.empSubQueryData();
+		for(EmpVO s:subList)
+		{
+			System.out.println(s.getEname()+" "
+					+s.getJob()+" "
+					+s.getHiredate().toString()+" "
+					+s.getSal()+" "
+					+s.getDvo().getDname()+" "
+					+s.getDvo().getLoc());
+		}
+		
+		System.out.println("\n");
+		System.out.println("==== JDBC에서 서브쿼리 이용 =====");
+		List<EmpVO> subList2=dao.empSubQueryData2();
+		for(EmpVO s:subList2)
+		{
+			System.out.println(s.getEname()+" "
+					+s.getJob()+" "
+					+s.getHiredate().toString()+" "
+					+s.getSal()+" "
+					+s.getDvo().getDname()+" "
+					+s.getDvo().getLoc());
+		}
+		
 	}
 
 }

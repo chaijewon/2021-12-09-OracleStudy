@@ -477,6 +477,178 @@ public class EmpDAO {
 	   return vo;
    }
    // 7. SubQuery 
+   /*
+    *   네트워크 통신 
+    *   서버 : 오라클 => 응답 
+    *   클라이언트 : 자바 => 요청 (JDBC) 
+    *                        ------- 속도의 문제 : 오라클연결 (DBCP)
+    *                        ------- 코딩이 너무 길어진다 
+    *                                => ORM (MyBatis,Hibernate)
+    *                                => Spring+Mybatis
+    *   서브쿼리 : SQL+SQL => SQL을 한개로 만드는 경우 
+    *            네트워크 => 한번에 모아서 전송 
+    *   ------
+    *     SELECT절 : 컬럼형식 => 스칼라서브쿼리 (테이블 여러개에서 데이터 추출)
+    *        형식) 
+    *             SELECT (SELECT~ ),
+    *                    (SELECT~ )
+    *             FROM table_name
+    *              
+    *     FROM절 : 테이블 대신 사용 => 인라인 뷰 
+    *              => Top-N(rownum) , 페이지 나누기 
+    *        형식)
+    *             SELECT ~
+    *             FROM (SELECT~) 
+    *                  --------- 실행한 컬럼만 사용이 가능 
+    *                  
+    *             SELECT ~
+    *             FROM (SELECT ~
+    *                   FROM (SELECT ~)
+    *     WHERE절 : 조건값 대신 사용 
+    *        형식) 
+    *              단일행 서브쿼리 : 서브쿼리의 결과값이 1개인 경우
+    *              SELECT ~
+    *              FROM table_name
+    *              WHERE 컬럼명 연산자 (SELECT~~)
+    *              ---------------- ----------
+    *                 메인쿼리          서브쿼리 
+    *              다중행 서브쿼리 : 서브쿼리 결과값이 여러개인 경우 
+    *              SELECT ~
+    *              FROM table_name
+    *              WHERE 컬럼명 IN,ANY,ALL,SOME (SELECT~~)
+    *              ---------------- ----------
+    *                 메인쿼리          서브쿼리 
+    *                 
+    *              IN(10,20,30) => 동시 적용 
+    *              > ANY(10,20,30) => 10  >10
+    *              < ANY(10,20,30) => 30  <30
+    *              = ANY(10,20,30) => IN(10,20,30)
+    *              > ALL(10,20,30) => 30  >30
+    *              < ALL(10,20,30) => 10  <10
+    *              --------------------------- MIN/MAX
+    *              
+    *              WHERE deptno > (최소값) => 10,20,30)
+    *                    deptno > ANY(SELECT DISTINCT deptno
+    *                                 FROM emp) 10
+    *                    deptno > (SELECT MIN(deptno) FROM emp) 10
+    *                    
+    *                    deptno < ANY(SELECT DISTINCT deptno
+    *                                 FROM emp) 30
+    *                    deptno < (SELECT MAX(deptno) FROM emp) 30
+    *              
+    */
+   // 급여의 평균보다 많이 받는 사원의 이름,직위,입사일,급여,부서명,근무지 
+   // 서브쿼리 => 조인 
+   // 한명=> EmpVO  , 여러명 => List<EmpVO> 
+   public List<EmpVO> empSubQueryData()
+   {
+	   List<EmpVO> list=new ArrayList<EmpVO>();
+	   try
+	   {
+		   // 1. 오라클 연결 
+		   getConnection();
+		   // 2. SQL문장 
+		   String sql="SELECT ROUND(AVG(sal)) FROM emp";
+		   // 3. 결과값 받기
+		   ps=conn.prepareStatement(sql);
+		   ResultSet rs=ps.executeQuery();
+		   rs.next();
+		   int avg=rs.getInt(1);
+		   rs.close();
+		   ps.close();
+		   /// 급여 평균값을 구한다
+		   // 4. SQL문장 
+		   sql="SELECT ename,job,hiredate,sal,dname,loc "
+			  +"FROM emp,dept "
+			  +"WHERE emp.deptno=dept.deptno "
+			  +"AND sal>? "
+			  +"ORDER BY ename ASC";
+		   ps=conn.prepareStatement(sql);
+		   // ?에 값을 채운다 
+		   ps.setInt(1, avg);
+		   // 5. 결과값 받기 
+		   rs=ps.executeQuery();
+		   while(rs.next())
+		   {
+			   EmpVO vo=new EmpVO();
+			   vo.setEname(rs.getString(1));
+			   vo.setJob(rs.getString(2));
+			   vo.setHiredate(rs.getDate(3));
+			   vo.setSal(rs.getInt(4));
+			   vo.getDvo().setDname(rs.getString(5));
+			   vo.getDvo().setLoc(rs.getString(6));
+			   
+			   list.add(vo);
+		   }
+		   rs.close();
+	   }catch(Exception ex)
+	   {
+		   // 오류 처리 
+		   ex.printStackTrace();
+	   }
+	   finally
+	   {
+		   // 닫기 
+		   disConnection();
+	   }
+	   return list;
+   }
+   
+   public List<EmpVO> empSubQueryData2()
+   {
+	   List<EmpVO> list=new ArrayList<EmpVO>();
+	   try
+	   {
+		   // 1. 오라클 연결 
+		   getConnection();
+		   // 2. SQL문장 
+		   /*String sql="SELECT ROUND(AVG(sal)) FROM emp";
+		   // 3. 결과값 받기
+		   ps=conn.prepareStatement(sql);
+		   ResultSet rs=ps.executeQuery();
+		   rs.next();
+		   int avg=rs.getInt(1);
+		   rs.close();
+		   ps.close();*/
+		   /// 급여 평균값을 구한다
+		   // 4. SQL문장 
+		   String sql="SELECT ename,job,hiredate,sal,dname,loc "
+			  +"FROM emp,dept "
+			  +"WHERE emp.deptno=dept.deptno "
+			  +"AND sal>(SELECT ROUND(AVG(sal)) FROM emp) "
+			  +"ORDER BY ename ASC";
+		   ps=conn.prepareStatement(sql);
+		   // ?에 값을 채운다 
+		   
+		   // 5. 결과값 받기 
+		   ResultSet rs=ps.executeQuery();
+		   while(rs.next())
+		   {
+			   EmpVO vo=new EmpVO();
+			   vo.setEname(rs.getString(1));
+			   vo.setJob(rs.getString(2));
+			   vo.setHiredate(rs.getDate(3));
+			   vo.setSal(rs.getInt(4));
+			   vo.getDvo().setDname(rs.getString(5));
+			   vo.getDvo().setLoc(rs.getString(6));
+			   
+			   list.add(vo);
+		   }
+		   rs.close();
+	   }catch(Exception ex)
+	   {
+		   // 오류 처리 
+		   ex.printStackTrace();
+	   }
+	   finally
+	   {
+		   // 닫기 
+		   disConnection();
+	   }
+	   return list;
+   }
+   
+   
 }
 
 
