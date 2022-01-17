@@ -139,6 +139,30 @@ public class ClientMain {
 					+s.getDvo().getLoc());
 		}
 		
+		System.out.println("\n");
+		System.out.println("===== JOIN대신 스칼라서브쿼리 사용 =====");
+		subList2=dao.empSubQueryListData();
+		for(EmpVO s:subList2)
+		{
+			System.out.println(s.getEname()+" "
+					+s.getJob()+" "
+					+s.getHiredate().toString()+" "
+					+s.getSal()+" "
+					+s.getDvo().getDname()+" "
+					+s.getDvo().getLoc());
+		}
+		
+		System.out.println("\n");
+		System.out.println("=====인라인뷰를 이용한 데이터 자르기 =====");
+		subList2=dao.empTon5Data();
+		for(EmpVO s:subList2)
+		{
+			System.out.println(s.getEname()+" "
+					+s.getJob()+" "
+					+s.getHiredate().toString()+" "
+					+s.getSal());
+		}
+		
 	}
 
 }

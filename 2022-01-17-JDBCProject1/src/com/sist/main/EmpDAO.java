@@ -647,6 +647,111 @@ public class EmpDAO {
 	   }
 	   return list;
    }
+   // 스칼라 서브쿼리 
+   /*
+    *   SELECT ename,job,hiredate,sal,(SELECT dname FROM dept WHERE deptno=emp.deptno) dname,
+        (SELECT loc FROM dept WHERE deptno=emp.deptno) loc
+        FROM emp;
+    */
+   // -> JOIN없이 서브쿼리로 => 데이터 추출 (이름,직위,입사일, 급여, 부서명,근무지)
+   public List<EmpVO> empSubQueryListData()
+   {
+	   //1. 리턴형 
+	   List<EmpVO> list=new ArrayList<EmpVO>();
+	   try
+	   {
+		   // 1. 오라클 연결 
+		   getConnection(); // LIKE '%A%' ==> LIKE '%'||'A'||'%'
+		   // 자바에서 => 오라클로 전송 (문자열) => 공백 
+		   // String sql="SELECT ename,job,(SELECT~)"
+		   // 2. SQL문장 
+		   // SQLDevloper => 
+		   String sql="SELECT ename,job,hiredate,sal,"
+				     +"(SELECT dname FROM dept WHERE deptno=emp.deptno),"
+				     +"(SELECT loc FROM dept WHERE deptno=emp.deptno) "
+				     +"FROM emp";
+		   // 3. 오라클로 SQL문장 전송 
+		   ps=conn.prepareStatement(sql);
+		   // 4. 결과값을 받는다 
+		   ResultSet rs=ps.executeQuery();
+		   // 5. 결과값을 List에 담는다 
+		   while(rs.next())
+		   {
+			   EmpVO vo=new EmpVO();
+			   vo.setEname(rs.getString(1));
+			   vo.setJob(rs.getString(2));
+			   vo.setHiredate(rs.getDate(3));
+			   vo.setSal(rs.getInt(4));
+			   vo.getDvo().setDname(rs.getString(5));
+			   vo.getDvo().setLoc(rs.getString(6));
+			   
+			   list.add(vo);
+		   }
+		   rs.close();
+	   }catch(Exception ex)
+	   {
+		   ex.printStackTrace();
+	   }
+	   finally
+	   {
+		   disConnection();// 닫기
+	   }
+	   return list;
+   }
+   // 인라인뷰 
+   /*
+    *   SELECT : 사용 
+    *    1) 전체 목록 (목록 출력)
+    *    2) 조건 => 1개 (상세보기)
+    *    3) 조인 
+    *    4) 서브쿼리 : 1) 스칼라 , 2) 인라인뷰 
+    */
+   // Top-N (위에서 몇개~~ 인기검색어 , 인기 공지사항 ~ 인기 게시물 )
+   // 1. 급여가 많은 순서로 상위 5명을 추출 => 이름,입사일, 직위, 급여 
+   /*
+    *    SELECT ----> 3)
+    *    FROM  ----- 1)
+    *    WHERE ----- 2)
+    *    ORDER BY --> 4)
+    *    
+    *    ==> 중간에 데이터를 추출 할 수 없다 
+    *    rownum BETWEEN 6 AND 10 ==> (X) 
+    */
+   public List<EmpVO> empTon5Data()
+   {
+	   List<EmpVO> list=new ArrayList<EmpVO>();
+	   try
+	   {
+		   // 연결 
+		   getConnection();
+		   // SQL문장 
+		   String sql="SELECT ename,job,hiredate,sal,rownum "
+				     +"FROM (SELECT ename,job,hiredate,sal "
+				     +"FROM emp ORDER BY sal DESC) "
+				     +"WHERE rownum<=5";
+		   ps=conn.prepareStatement(sql);
+		   ResultSet rs=ps.executeQuery();
+		   while(rs.next())
+		   {
+			   EmpVO vo=new EmpVO();
+			   vo.setEname(rs.getString(1));
+			   vo.setJob(rs.getString(2));
+			   vo.setHiredate(rs.getDate(3));
+			   vo.setSal(rs.getInt(4));
+			   
+			   list.add(vo);
+		   }
+		   rs.close();
+	   }catch(Exception ex)
+	   {
+		   ex.printStackTrace();
+	   }
+	   finally
+	   {
+		   disConnection();
+	   }
+	   return list;
+   }
    
    
 }
