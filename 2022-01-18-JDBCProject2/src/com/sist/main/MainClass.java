@@ -1,47 +1,48 @@
 package com.sist.main;
 import java.util.*;
+//snfcnscns
 public class MainClass {
 	static StudentDAO dao=new StudentDAO();
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-        // 1. ¿À¶óÅ¬ ¿¬°á 
+        // 1. ï¿½ï¿½ï¿½ï¿½Å¬ ï¿½ï¿½ï¿½ï¿½ 
 		
-		// 2. »ç¿ëÀÚ ÀÔ·Â 
+		// 2. ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ô·ï¿½ 
 		/*Scanner scan=new Scanner(System.in);
-		System.out.print("ÀÌ¸§ ÀÔ·Â:");
+		System.out.print("ï¿½Ì¸ï¿½ ï¿½Ô·ï¿½:");
 		String name=scan.next();
-		System.out.print("±¹¾î Á¡¼ö:");
+		System.out.print("ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½:");
 		int kor=scan.nextInt();
-		System.out.print("¿µ¾î Á¡¼ö:");
+		System.out.print("ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½:");
 		int eng=scan.nextInt();
-		System.out.print("¼öÇÐ Á¡¼ö:");
+		System.out.print("ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½:");
 		int math=scan.nextInt();
 		
-		// »ç¿ëÀÚ°¡ ÀÔ·ÂÇÑ °ªÀ» ¹­¾î¼­ ¿À¶óÅ¬·Î Àü¼Û 
+		// ï¿½ï¿½ï¿½ï¿½Ú°ï¿½ ï¿½Ô·ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½î¼­ ï¿½ï¿½ï¿½ï¿½Å¬ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ 
 		StudentVO vo=new StudentVO();
 		vo.setName(name);
 		vo.setEng(eng);
 		vo.setMath(math);
 		vo.setKor(kor);
 		
-		// ¿À¶óÅ¬¿¡¼­ INSERT¿äÃ» 
+		// ï¿½ï¿½ï¿½ï¿½Å¬ï¿½ï¿½ï¿½ï¿½ INSERTï¿½ï¿½Ã» 
 		dao.studentInsert(vo);
-		System.out.println("***** ¿À¶óÅ¬ µ¥ÀÌÅÍ Ãß°¡ ¿Ï·á *****");*/
+		System.out.println("***** ï¿½ï¿½ï¿½ï¿½Å¬ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ß°ï¿½ ï¿½Ï·ï¿½ *****");*/
 		
-		// ÀüÃ¼ ÇÐ»ý Ãâ·Â 
+		// ï¿½ï¿½Ã¼ ï¿½Ð»ï¿½ ï¿½ï¿½ï¿½ 
 		studentPrint();
 		
-		// ¼öÁ¤ 
+		// ï¿½ï¿½ï¿½ï¿½ 
 		/*Scanner scan=new Scanner(System.in);
-		System.out.print("¼öÁ¤ÇÒ ÇÐ¹ø ¼±ÅÃ:");
+		System.out.print("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ð¹ï¿½ ï¿½ï¿½ï¿½ï¿½:");
 		int hakbun=scan.nextInt();
-		System.out.print("±¹¾î º¯°æ:");
+		System.out.print("ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½:");
 		int kor=scan.nextInt();
-		System.out.print("¿µ¾î º¯°æ:");
+		System.out.print("ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½:");
 		int eng=scan.nextInt();
-		System.out.print("¼öÇÐ º¯°æ:");
+		System.out.print("ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½:");
 		int math=scan.nextInt();
-		// ÀÔ·ÂµÈ µ¥ÀÌÅÍ¸¦ ¸ð¾Æ¼­ DAO·Î Àü¼Û 
+		// ï¿½Ô·Âµï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Í¸ï¿½ ï¿½ï¿½Æ¼ï¿½ DAOï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ 
 		StudentVO vo=new StudentVO();
 		vo.setHakbun(hakbun);
 		vo.setKor(kor);
@@ -50,27 +51,27 @@ public class MainClass {
 		
 		dao.studentUpdate(vo);
 		
-		System.out.println("***** ¼öÁ¤ÀÌ ¿Ï·áµÇ¾ú½À´Ï´Ù *****");
-		// ÀüÃ¼ ÇÐ»ý Ãâ·Â 
+		System.out.println("***** ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ï·ï¿½Ç¾ï¿½ï¿½ï¿½ï¿½Ï´ï¿½ *****");
+		// ï¿½ï¿½Ã¼ ï¿½Ð»ï¿½ ï¿½ï¿½ï¿½ 
 		studentPrint();*/
 		
-		// »èÁ¦ 
+		// ï¿½ï¿½ï¿½ï¿½ 
 		Scanner scan=new Scanner(System.in);
-		System.out.print("»èÁ¦ÇÒ ÇÐ¹ø ¼±ÅÃ:");
+		System.out.print("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ð¹ï¿½ ï¿½ï¿½ï¿½ï¿½:");
 		int hakbun=scan.nextInt();
-		// DAO·Î »èÁ¦¿äÃ» 
+		// DAOï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ã» 
 		dao.studentDelete(hakbun);
-		System.out.println("***** »èÁ¦ ¿Ï·á *****");
-		// ÀüÃ¼ ÇÐ»ý Ãâ·Â
+		System.out.println("***** ï¿½ï¿½ï¿½ï¿½ ï¿½Ï·ï¿½ *****");
+		// ï¿½ï¿½Ã¼ ï¿½Ð»ï¿½ ï¿½ï¿½ï¿½
 		studentPrint();
 
 		
 	}
 	public static void studentPrint()
 	{
-		// ÇÐ»ý ¸ñ·Ï ¿äÃ» 
+		// ï¿½Ð»ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½Ã» 
 		List<StudentVO> list=dao.studentListData();
-		// »ç¿ëÀÚ¿¡°Ô Ãâ·Â 
+		// ï¿½ï¿½ï¿½ï¿½Ú¿ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ 
 		for(StudentVO vo:list)
 		{
 			System.out.println(vo.getHakbun()+" "
