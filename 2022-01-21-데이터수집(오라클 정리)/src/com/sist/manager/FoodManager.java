@@ -55,6 +55,7 @@ public class FoodManager {
     			Document doc=Jsoup.connect(vo.getLink()).get();
     			Elements link=doc.select("span.title a");
     			// <a> , <img> => attr() => text()
+    			fvo.setCno(vo.getCno());
     			for(int i=0;i<link.size();i++)
     			{
     				//System.out.println((i+1)+"."+link.get(i).attr("href"));
@@ -139,16 +140,20 @@ public class FoodManager {
     				{
     				  Element type=doc2.select("table.info tr td span").get(2);
     				  System.out.println(type.text());
+    				  fvo.setType(type.text());
     				}catch(Exception ex){
     					System.out.println("등록된 음식종류가 없음");
+    					fvo.setType("no");
     				}
     				
     				try
     				{
     				  Element price=doc2.select("table.info tr td").get(3);
     				  System.out.println(price.text());
+    				  fvo.setPrice(price.text());
     				}catch(Exception ex){
     					System.out.println("가격대가 없습니다");
+    					fvo.setPrice("no");
     				}
     				/*
     				 *   <tr>
@@ -166,16 +171,20 @@ public class FoodManager {
     				{
     				  Element parking=doc2.select("table.info tr td").get(4);
     				  System.out.println(parking.text());
+    				  fvo.setParking(parking.text());
     				}catch(Exception ex){
     					System.out.println("주차 없음");
+    					fvo.setParking("no");
     				}
     				
     				try
     				{
     				  Element time=doc2.select("table.info tr td").get(5);
     				  System.out.println(time.text());
+    				  fvo.setTime(time.text());
     				}catch(Exception ex){
     					System.out.println("영업시간 없음");
+    					fvo.setTime("no");
     				}
     				
     				/*
@@ -196,13 +205,18 @@ public class FoodManager {
     				{
     				  Element menu=doc2.selectFirst("table.info td.menu_td");
     				  System.out.println(menu.text());
+    				  fvo.setMenu(menu.text());
     				}catch(Exception ex)
     				{
     					System.out.println("등록된 메뉴 없음");
+    					fvo.setMenu("no");
     				}
+    				// 데이터베이스에 저장 
+    				dao.foodInsert(fvo);
     				System.out.println("=========================");
     			}
     		}
+    		System.out.println("저장 완료!!");
     	}catch(Exception ex)
     	{
     		System.out.println(ex.getMessage());// 에러난 위치지정이 없다 
