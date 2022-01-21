@@ -21,8 +21,14 @@ package com.sist.dao;
 public class FoodHouseVO {
     private int no,cno,good,soso,bad;
     private double score;
-    private String poster,name,address,tel,type,price,time,menu;
+    private String poster,name,address,tel,type,price,time,menu,parking;
     
+	public String getParking() {
+		return parking;
+	}
+	public void setParking(String parking) {
+		this.parking = parking;
+	}
 	public int getNo() {
 		return no;
 	}

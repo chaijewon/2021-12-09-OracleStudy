@@ -160,7 +160,8 @@ public class FoodDAO {
 		   getConnection();
 		   // 2. SQL문장 
 		   String sql="SELECT cno,title,link "
-				     +"FROM category";
+				     +"FROM category "
+				     +"ORDER BY cno ASC";
 		   // 3. 오라클로 전송 
 		   ps=conn.prepareStatement(sql);
 		   // 4. ?(전송값이 있는지 확인) 
@@ -188,6 +189,73 @@ public class FoodDAO {
 	   }
 	   return list;
    }
+   // 수집된 데이터를 오라클에 저장 
+   /*
+    *   NO      NOT NULL NUMBER         
+		CNO              NUMBER         
+		POSTER  NOT NULL VARCHAR2(4000) 
+		NAME    NOT NULL VARCHAR2(200)  
+		SCORE   NOT NULL NUMBER(2,1)    
+		ADDRESS NOT NULL VARCHAR2(500)  
+		TEL     NOT NULL VARCHAR2(20)   
+		TYPE    NOT NULL VARCHAR2(100)  
+		PRICE   NOT NULL VARCHAR2(100)  
+		TIME             VARCHAR2(200)  
+		MENU             CLOB           
+		GOOD             NUMBER         
+		SOSO             NUMBER         
+		BAD              NUMBER 
+		
+		// 메소드 => 매개변수 (3이상 초과하지 않는다)
+		 *   => 배열 , class 
+    */
+   public void foodInsert(FoodHouseVO vo)
+   {
+	   try
+	   {
+		   //1. 연결
+		   getConnection();
+		   //2. SQL문장 제작 
+		   String sql="INSERT INTO foodHouse VALUES("
+				     +"(SELECT NVL(MAX(no)+1,1) FROM foodHouse),"
+				     +"?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+		   /*
+		    *   String sql="INSERT INTO foodHouse VALUES("
+				     +"(SELECT NVL(MAX(no)+1,1) FROM foodHouse),"
+				     +vo.getCno()+",'"+vo.getPoster()+"','"+?,?,?,?,?,?,?,?,?,?,?,?)";
+		    */
+		   //3. SQL문장 오라클로 전송 
+		   ps=conn.prepareStatement(sql);
+		   //4. ?에 값을 채운다 
+		   ps.setInt(1, vo.getCno());
+		   ps.setString(2, vo.getPoster()); // => 'aaa'
+		   ps.setString(3, vo.getName());
+		   ps.setDouble(4, vo.getScore());
+		   ps.setString(5, vo.getAddress());
+		   ps.setString(6, vo.getTel());
+		   ps.setString(7, vo.getType());
+		   ps.setString(8, vo.getPrice());
+		   ps.setString(9, vo.getTime());
+		   ps.setString(10, vo.getMenu());
+		   ps.setInt(11, vo.getGood());
+		   ps.setInt(12, vo.getSoso());
+		   ps.setInt(13, vo.getBad());
+		   ps.setString(14, vo.getParking());
+		   
+		   // 실행 명령
+		   ps.executeUpdate(); // commit() => 자동으로 저장 
+	   }catch(Exception ex)
+	   {
+		   // 오류 확인 
+		   ex.printStackTrace();
+	   }
+	   finally
+	   {
+		   //  닫기
+		   disConnection();
+	   }
+   }
+   
 }
 
 
